@@ -12,9 +12,8 @@ namespace Pancake.Controllers
     
     public class HomeController : Controller
     {
-        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
-        
-
+        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("APPSETTING_StorageConnectionString"));
+       
         public ActionResult Index()
         {
             return View();
@@ -22,6 +21,7 @@ namespace Pancake.Controllers
 
         public ActionResult About(String queueMessage)
         {
+            //Environment.GetEnvironmentVariable("APPSETTING_StorageConnectionString");
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
             // Retrieve a reference to a container.
             CloudQueue queue = queueClient.GetQueueReference("pancakequeue");
