@@ -12,7 +12,7 @@ namespace Pancake.Controllers
     
     public class HomeController : Controller
     {
-        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("APPSETTING_StorageConnectionString"));
+        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionString"));
        
         public ActionResult Index()
         {
