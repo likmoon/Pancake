@@ -21,20 +21,13 @@ namespace Pancake.Controllers
 
         public ActionResult About(String queueMessage)
         {
-            //Environment.GetEnvironmentVariable("APPSETTING_StorageConnectionString");
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-            // Retrieve a reference to a container.
             CloudQueue queue = queueClient.GetQueueReference("pancakequeue");
-
-            // Create the queue if it doesn't already exist
             queue.CreateIfNotExists();
 
-            // Create a message and add it to the queue.
             CloudQueueMessage message = new CloudQueueMessage(queueMessage);
             queue.AddMessage(message);
-            // Peek at the next message
             CloudQueueMessage peekedMessage = queue.PeekMessage();
-
             ViewBag.Message = String.Format("Ваше сообщение добавлено: {0}", peekedMessage.AsString);
 
             return View();
