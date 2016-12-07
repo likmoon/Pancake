@@ -54,12 +54,14 @@ namespace Pancake.Controllers
             TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.GenerateFilterCondition(
                 "PartitionKey", QueryComparisons.Equal, "pancakeShell"));
 
+            List<PancakeEntity> PancakeList = new List<PancakeEntity>();
+
             foreach (PancakeEntity item in table.ExecuteQuery(query))
             {
-                ViewBag.Message = String.Format("Entity: {0}, id: {1}", item.Title, item.RowKey);
+                PancakeList.Add(item);
             }
-            
-            return View();
+
+            return View(PancakeList);
         }
     }
 }
