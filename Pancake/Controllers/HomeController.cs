@@ -51,8 +51,14 @@ namespace Pancake.Controllers
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference("pancaketable");
 
-            TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.GenerateFilterCondition(
-                "PartitionKey", QueryComparisons.Equal, "pancakeShell"));
+            string condition1 = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "pancakeShell");
+            string condition2 = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, "123");
+
+            TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.CombineFilters(condition1, TableOperators.And, condition2));
+       
+
+            // TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.GenerateFilterCondition(
+            //    "PartitionKey", QueryComparisons.Equal, "pancakeShell"));
 
             List<PancakeEntity> PancakeList = new List<PancakeEntity>();
 
