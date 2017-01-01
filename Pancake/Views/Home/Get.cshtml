@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Pancake.Controllers.PancakeEntity>
 
 @{
-    ViewBag.Title = "Contact";
+    ViewBag.Title = "Get";
 }
 
-<h2>Contact</h2>
+<h2>Get</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -21,10 +21,10 @@
             @Html.DisplayNameFor(model => model.Timestamp)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ETag)
+            @Html.DisplayNameFor(model => model.Title)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.ValidFrom)
         </th>
         <th></th>
     </tr>
@@ -41,10 +41,10 @@
             @Html.DisplayFor(modelItem => item.Timestamp)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ETag)
+            @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Title)
+            @Html.DisplayFor(modelItem => item.ValidFrom)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |

@@ -7,20 +7,33 @@ using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace Pancake.Controllers
 {
+    public class Hash
+    {
+        public static string getHashSha256(string text)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(text);
+            SHA256Managed hashstring = new SHA256Managed();
+            byte[] hash = hashstring.ComputeHash(bytes);
+            string hashString = string.Empty;
+            foreach (byte x in hash)
+            {
+                hashString += String.Format("{0:x2}", x);
+            }
+            return hashString;
+        }
+    }
+
     public class PancakeEntity : TableEntity
     {
-        public PancakeEntity(string var1, string var2)
-        {
-            this.PartitionKey = var1;
-            this.RowKey = var2;
-        }
-
         public PancakeEntity() { }
         public string Title { get; set; }
-       
+        public DateTime ValidFrom { get; set; }
     }
 
     public class HomeController : Controller
@@ -32,31 +45,38 @@ namespace Pancake.Controllers
             return View();
         }
 
-        public ActionResult About(String queueMessage)
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(PancakeEntity pancakeEntity)
         {
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
             CloudQueue queue = queueClient.GetQueueReference("pancakequeue");
             queue.CreateIfNotExists();
 
-            CloudQueueMessage message = new CloudQueueMessage(queueMessage);
-            queue.AddMessage(message);
-            CloudQueueMessage peekedMessage = queue.PeekMessage();
-            ViewBag.Message = String.Format("Ваше сообщение добавлено: {0}", peekedMessage.AsString);
+            pancakeEntity.RowKey = Hash.getHashSha256(String.Format("{0}{1}{2}{3}",
+                pancakeEntity.PartitionKey, pancakeEntity.RowKey, pancakeEntity.Title, pancakeEntity.Timestamp));
+            var jsonObject = JsonConvert.SerializeObject(pancakeEntity);
 
-            return View();
+            CloudQueueMessage message = new CloudQueueMessage(jsonObject);
+            queue.AddMessage(message);
+            return RedirectToAction("Index");
         }
 
-        public ActionResult Contact()
+        public ActionResult Get(string input)
         {
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference("pancaketable");
-
-            string condition1 = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "pancakeShell");
-            string condition2 = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, "123");
+            var currentMonth = DateTime.Now;
+            string condition1 = TableQuery.GenerateFilterCondition(
+                "PartitionKey", QueryComparisons.Equal, currentMonth.ToString("yyyyMM"));
+            string condition2 = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input);
 
             TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.CombineFilters(condition1, TableOperators.And, condition2));
-       
-
             // TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.GenerateFilterCondition(
             //    "PartitionKey", QueryComparisons.Equal, "pancakeShell"));
 
