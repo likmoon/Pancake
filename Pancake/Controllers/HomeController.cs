@@ -80,14 +80,19 @@ namespace Pancake.Controllers
             // TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.GenerateFilterCondition(
             //    "PartitionKey", QueryComparisons.Equal, "pancakeShell"));
 
-            List<PancakeEntity> PancakeList = new List<PancakeEntity>();
-
-            foreach (PancakeEntity item in table.ExecuteQuery(query))
+            var queryResult = table.ExecuteQuery(query).ToArray();
+            if (queryResult.Length == 1)
             {
-                PancakeList.Add(item);
+                ViewBag.Title = "PancakeEntity";
+                ViewBag.Message = "Have a cookie";
+                return View(queryResult[0]);
             }
-
-            return View(PancakeList);
+            else
+            {
+                ViewBag.Title = "Erop";
+                ViewBag.Message = String.Format("Viel Zu Viel");
+                return View();
+            }
         }
     }
 }

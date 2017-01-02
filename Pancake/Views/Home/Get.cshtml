@@ -1,57 +1,34 @@
-﻿@model IEnumerable<Pancake.Controllers.PancakeEntity>
+﻿@model Pancake.Controllers.PancakeEntity
 
-@{
-    ViewBag.Title = "Get";
+<h2>@ViewBag.Title</h2>
+<h3>@ViewBag.Message</h3>
+@if (ViewBag.Message != null)
+{
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+                <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ValidFrom)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ValidFrom)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
 }
 
-<h2>Get</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PartitionKey)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RowKey)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Timestamp)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ValidFrom)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.PartitionKey)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RowKey)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Timestamp)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ValidFrom)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
-
-</table>
