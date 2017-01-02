@@ -67,14 +67,21 @@ namespace Pancake.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Get(string input)
+        public ActionResult Get()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Get(string ClientData)
         {
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference("pancaketable");
             var currentMonth = DateTime.Now;
             string condition1 = TableQuery.GenerateFilterCondition(
                 "PartitionKey", QueryComparisons.Equal, currentMonth.ToString("yyyyMM"));
-            string condition2 = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input);
+            string condition2 = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, ClientData);
 
             TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.CombineFilters(condition1, TableOperators.And, condition2));
             // TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.GenerateFilterCondition(
@@ -83,16 +90,18 @@ namespace Pancake.Controllers
             var queryResult = table.ExecuteQuery(query).ToArray();
             if (queryResult.Length == 1)
             {
-                ViewBag.Title = "PancakeEntity";
-                ViewBag.Message = "Have a cookie";
-                return View(queryResult[0]);
+                return View("Display", queryResult[0]);
             }
             else
             {
-                ViewBag.Title = "Erop";
-                ViewBag.Message = String.Format("Viel Zu Viel");
+                ViewBag.Message = "Erop";
                 return View();
             }
+        }
+
+        public ActionResult Display(PancakeEntity item)
+        {
+            return View(item);
         }
     }
 }
