@@ -20,12 +20,15 @@ namespace Pancake
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+              "~/Scripts/bootstrap.js",
+              "~/Scripts/bootstrap-datepicker.js",
+              "~/Scripts/DatePickerReady.js",
+              "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                          "~/Content/bootstrap.css",
+                          "~/Content/bootstrap-datepicker3.css",
+                          "~/Content/site.css"));
         }
     }
 }

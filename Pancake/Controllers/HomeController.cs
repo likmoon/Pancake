@@ -10,6 +10,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using System.Text;
 using System.Security.Cryptography;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pancake.Controllers
 {
