@@ -10,7 +10,6 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using System.Text;
 using System.Security.Cryptography;
-using System.ComponentModel.DataAnnotations;
 
 namespace Pancake.Controllers
 {
@@ -59,6 +58,7 @@ namespace Pancake.Controllers
             CloudQueue queue = queueClient.GetQueueReference("pancakequeue");
             queue.CreateIfNotExists();
 
+            pancakeEntity.PartitionKey = DateTime.Now.ToString("yyyyMM");
             pancakeEntity.RowKey = Hash.getHashSha256(String.Format("{0}{1}{2}{3}",
                 pancakeEntity.PartitionKey, pancakeEntity.RowKey, pancakeEntity.Title, pancakeEntity.Timestamp));
             var jsonObject = JsonConvert.SerializeObject(pancakeEntity);
@@ -79,9 +79,9 @@ namespace Pancake.Controllers
         {
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             CloudTable table = tableClient.GetTableReference("pancaketable");
-            var currentMonth = DateTime.Now;
+
             string condition1 = TableQuery.GenerateFilterCondition(
-                "PartitionKey", QueryComparisons.Equal, currentMonth.ToString("yyyyMM"));
+                "PartitionKey", QueryComparisons.Equal, DateTime.Now.ToString("yyyyMM"));
             string condition2 = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, ClientData);
 
             TableQuery<PancakeEntity> query = new TableQuery<PancakeEntity>().Where(TableQuery.CombineFilters(condition1, TableOperators.And, condition2));
