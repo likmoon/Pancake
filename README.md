@@ -1,2 +1,0 @@
-# Pancake
-Privet Bulya

@@ -1,0 +1,20 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "name": "req",
+      "type": "httpTrigger",
+      "direction": "in",
+      "methods": [
+        "get"
+      ],
+      "route": "event/{fioy:maxlength(50)}/{emaily:maxlength(50)}/{phony:maxlength(50)}/{dayreg:maxlength(50)}/{commentito:maxlength(50)}/"
+    },
+    {
+      "name": "$return",
+      "type": "http",
+      "direction": "out"
+    }
+  ],
+  "disabled": false
+}
